@@ -50,7 +50,8 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
 
         public Program()
         {
-            Start();
+            Rk4(new Vector3(-3, 2, 0), new Vector3(1, 3, 0), 3.6, 1, 3.5);
+            //Start();
         }
 
         public void Demo(double gravity,
@@ -78,7 +79,10 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             Vector3 acceleration = Vector3.Multiply(fNet, 1d / mass);
             Console.WriteLine("acceleration: " + fNet);
 
-            Rk4(position, velocity, acceleration, time, h);
+
+
+            
+            
         }
 
         //F̅g = -mgk̂
@@ -112,9 +116,57 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             return Vector3.Multiply(fmHat, fm);
         }
 
-        public void Rk4(Vector3 position, Vector3 velocity, Vector3 acceleration, double time, double h)
+        public void Rk4(Vector3 position0, Vector3 velocity0, double tFinal, double steps, double time)
         {
+            double h;
+            Vector2 k, k1, k2, k3, k4, PV1;
+            Vector2 PV = new Vector2(position0, velocity0);
+            Console.WriteLine(PV);
+
+            h = (tFinal - time) / steps;
+            //K1
+            k1 = func(time, PV) * h;
+            //K2
+            k2 = func((time + h) / 2, (PV + k1) / 2) * h;
+            //K3
+            k3 = func((time + h) / 2, (PV + k2) / 2) * h;
+            //K4
+            k4 = func((time + h), (PV + k3)) * h;
+
+            k = (k1+(k2 * 2d) + (k3 * 2d) + k4) * (1/6);
+            Console.WriteLine( "k1" + k1);
+            //Console.WriteLine(k2);
+            //Console.WriteLine(k3);
+            //Console.WriteLine(k4);
+
+
+            PV1 = PV + k;
+            //Console.WriteLine(PV1);
         }
+
+        public Vector2 func(double time, Vector2 PV)
+        {
+            Vector2 PVfunc = PV * time;
+            Console.WriteLine(PVfunc);
+            return PVfunc;
+        }
+
+        public void Rk42(Vector3 position, Vector3 velocity, Vector3 acceleration, double steps, double time)
+        {
+            Vector2 y = new Vector2(position, velocity);
+            Vector2 k1 = y * steps;
+            Vector2 k2 = F(time + steps / 2d, y + k1 / 2d);
+            Vector2 k3 = F(time + steps/2d, y + k2/2);
+            Vector2 k4 = F(time + steps, y + k3);
+            Vector2 k = k3 * 2d;
+            //Vector2 k = (k1 + (2 * k2) + (2 * k3) + k4);
+        }
+
+        public Vector2 F(double time, Vector2 y)
+        {
+            return y * time;
+        }
+
 
 
         public void Start()

@@ -199,6 +199,13 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             z *= other.Z;
         }
 
+        public void Add(Vector3 other)
+        {
+            x += other.X;
+            y += other.Y;
+            z += other.Z;
+        }
+
         public void Divide(double n)
         {
             x /= n;
