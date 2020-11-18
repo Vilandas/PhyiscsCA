@@ -9,6 +9,7 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         private double x;
         private double y;
         private double z;
+        private double length;
 
         #endregion
 
@@ -30,6 +31,16 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         {
             get { return z; }
             set { z = value; }
+        }
+
+        public double Length
+        {
+            get
+            {
+                if (length != 0)
+                    return length;
+                return Math.Sqrt((x * x) + (y * y) + (z * z));
+            }
         }
 
         #endregion
@@ -101,7 +112,7 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         public static Vector3 Normalise(Vector3 orignal)
         {
             Vector3 normal = orignal.Clone() as Vector3;
-            normal.Divide(normal.Length());
+            normal.Divide(normal.Length);
             return normal;
         }
 
@@ -173,16 +184,12 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             this.x = x;
             this.y = y;
             this.z = z;
-        }
-
-        public double Length()
-        {
-            return Math.Sqrt((x * x) + (y * y) + (z * z));
+            length = 0;
         }
 
         public void Normalise()
         {
-            Divide(Length());
+            Divide(Length);
         }
 
         public void Multiply(double n)

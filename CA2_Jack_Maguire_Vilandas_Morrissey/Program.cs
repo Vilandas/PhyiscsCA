@@ -50,121 +50,17 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
 
         public Program()
         {
-            Rk4(new Vector3(-3, 2, 0), new Vector3(1, 3, 0), 3.6, 1, 3.5);
-            //Start();
+            Start();
         }
 
         public void Demo(double gravity,
-            double time, double h, double radius, double density,
+            double time, double steps, double radius, double density,
             Vector3 position, Vector3 velocity, Vector3 spin,
             double fluidDensity, double dragCoeff, Vector3 flowRate)
         {
-            double volume = (4d / 3d) * Math.PI * Math.Pow(radius, 3);
-            double mass = density * volume;
-
-            Vector3 va = Vector3.Subtract(velocity, flowRate);
-            double vaLength = va.Length();
-
-            Vector3 fGravity = ForceGravity(mass, gravity);
-            Vector3 fDrag = ForceDrag(fluidDensity, radius, dragCoeff, vaLength, va);
-            Vector3 fMagnus = ForceMagnus(fluidDensity, radius, vaLength, spin, va);
-
-            Console.WriteLine("\nfGravity: " + fGravity);
-            Console.WriteLine("fDrag: " + fDrag);
-            Console.WriteLine("fMagnus: " + fMagnus);
-
-            Vector3 fNet = fGravity + fDrag + fMagnus;
-            Console.WriteLine("\nfNet: " + fNet);
-
-            Vector3 acceleration = Vector3.Multiply(fNet, 1d / mass);
-            Console.WriteLine("acceleration: " + fNet);
-
-
-
-            
-            
-        }
-
-        //F̅g = -mgk̂
-        public Vector3 ForceGravity(double mass, double gravity)
-        {
-            return Vector3.Multiply(Vector3.Up(), (-mass * gravity));
-        }
-
-        //F̅d = ||F̅d|| * F̂d = [½ * P * A * Cd * ||Va||²][-V̂a]
-        public Vector3 ForceDrag(double fluidDensity, double radius, double dragCoeff, double vaLength, Vector3 va)
-        {
-            double fd = (1d / 2d) * fluidDensity * (Math.PI * Math.Pow(radius, 2)) * dragCoeff * Math.Pow(vaLength, 2);
-            Vector3 unitVa = Vector3.Normalise(va);
-            return Vector3.Multiply(unitVa, -fd);
-        }
-
-        //F̅m = ||F̅m|| * F̂m
-        public Vector3 ForceMagnus(double fluidDensity, double radius, double vaLength, Vector3 spin, Vector3 va)
-        {
-            //F̅m = ||F̅m|| * F̂m
-            //Fm = d * r * ||R̅|| * ||V̅a||
-            //d = PI/2 * P * r²
-
-            double d = Math.PI / 2d * fluidDensity * Math.Pow(radius, 2);
-            double fm = (d * radius * spin.Length() * vaLength);
-
-            //F̂m = R̅ x V̅a / ||R̅ x V̅a||
-            Vector3 rXva = Vector3.Cross(spin, va);
-            Vector3 fmHat = Vector3.Normalise(rXva);
-
-            return Vector3.Multiply(fmHat, fm);
-        }
-
-        public void Rk4(Vector3 position0, Vector3 velocity0, double tFinal, double steps, double time)
-        {
-            double h;
-            Vector2 k, k1, k2, k3, k4, PV1;
-            Vector2 PV = new Vector2(position0, velocity0);
-            Console.WriteLine(PV);
-
-            h = (tFinal - time) / steps;
-            //K1
-            k1 = func(time, PV) * h;
-            //K2
-            k2 = func((time + h) / 2, (PV + k1) / 2) * h;
-            //K3
-            k3 = func((time + h) / 2, (PV + k2) / 2) * h;
-            //K4
-            k4 = func((time + h), (PV + k3)) * h;
-
-            k = (k1+(k2 * 2d) + (k3 * 2d) + k4) * (1/6);
-            Console.WriteLine( "k1" + k1);
-            //Console.WriteLine(k2);
-            //Console.WriteLine(k3);
-            //Console.WriteLine(k4);
-
-
-            PV1 = PV + k;
-            //Console.WriteLine(PV1);
-        }
-
-        public Vector2 func(double time, Vector2 PV)
-        {
-            Vector2 PVfunc = PV * time;
-            Console.WriteLine(PVfunc);
-            return PVfunc;
-        }
-
-        public void Rk42(Vector3 position, Vector3 velocity, Vector3 acceleration, double steps, double time)
-        {
-            Vector2 y = new Vector2(position, velocity);
-            Vector2 k1 = y * steps;
-            Vector2 k2 = F(time + steps / 2d, y + k1 / 2d);
-            Vector2 k3 = F(time + steps/2d, y + k2/2);
-            Vector2 k4 = F(time + steps, y + k3);
-            Vector2 k = k3 * 2d;
-            //Vector2 k = (k1 + (2 * k2) + (2 * k3) + k4);
-        }
-
-        public Vector2 F(double time, Vector2 y)
-        {
-            return y * time;
+            Physics p = new Physics(gravity, time, steps, radius, density,
+                position, velocity, spin, fluidDensity, dragCoeff, flowRate);
+            p.Start();
         }
 
 
