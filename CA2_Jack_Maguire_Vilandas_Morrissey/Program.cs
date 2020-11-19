@@ -85,13 +85,13 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
                     case MenuOptions.Example_two:
                         Demo(9.81,
                             5, 0.1, 0.05, 7800,
-                            new Vector3(2, -3, 6), new Vector3(-5, 14, 2), new Vector3(-10d / 3d, -5d / 3d, 10d / 3d),
+                            new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(-10d / 3d, -5d / 3d, 10d / 3d),
                             80, 0.1, new Vector3(2, 3, 0));
                         break;
                     case MenuOptions.Example_three:
                         Demo(9.81,
-                            5, 0.1, 0.05, 7800,
-                            new Vector3(2, -3, 6), new Vector3(-5, 14, 2), new Vector3(-10d / 3d, -5d / 3d, 10d / 3d),
+                            3.5, 0.1, 0.05, 7800,
+                            new Vector3(-3, 2, 0), new Vector3(1, 3, 0), new Vector3(-10d / 3d, -5d / 3d, 10d / 3d),
                             80, 0.1, new Vector3(2, 3, 0));
                         break;
                     case MenuOptions.Custom:

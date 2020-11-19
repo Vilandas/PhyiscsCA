@@ -22,8 +22,6 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         private double volume;
         private double mass;
 
-        private Vector3 va;
-
         #endregion
 
         #region Constructor
@@ -55,19 +53,18 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
 
         public void Start()
         {
-            Rk42(CalculateAcceleration());
             Rk4();
-            Eulers(CalculateAcceleration());
+            Eulers(CalculateAcceleration(velocity));
 
         }
 
-        public Vector3 CalculateAcceleration()
+        public Vector3 CalculateAcceleration(Vector3 velocity)
         {
-            va = Vector3.Subtract(velocity, flowRate);
+            Vector3 va = Vector3.Subtract(velocity, flowRate);
 
             Vector3 fGravity = ForceGravity();
-            Vector3 fDrag = ForceDrag();
-            Vector3 fMagnus = ForceMagnus();
+            Vector3 fDrag = ForceDrag(va);
+            Vector3 fMagnus = ForceMagnus(va);
 
             Vector3 fNet = fGravity + fDrag + fMagnus;
 
@@ -82,6 +79,12 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             return acceleration;
         }
 
+        public Vector3 CalculateAcceleration2(Vector3 velocity)
+        {
+            Vector3 acceleration = new Vector3(0, -10, 0) + (velocity * 4 * velocity.Length); 
+            return acceleration;
+        }
+
         //F̅g = -mgk̂
         public Vector3 ForceGravity()
         {
@@ -89,7 +92,7 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         }
 
         //F̅d = ||F̅d|| * F̂d = [½ * P * A * Cd * ||Va||²][-V̂a]
-        public Vector3 ForceDrag()
+        public Vector3 ForceDrag(Vector3 va)
         {
             double fd = (1d / 2d) * fluidDensity * (Math.PI * Math.Pow(radius, 2)) * dragCoeff * Math.Pow(va.Length, 2);
             Vector3 unitVa = Vector3.Normalise(va);
@@ -97,7 +100,7 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
         }
 
         //F̅m = ||F̅m|| * F̂m
-        public Vector3 ForceMagnus()
+        public Vector3 ForceMagnus(Vector3 va)
         {
             //F̅m = ||F̅m|| * F̂m
             //Fm = d * r * ||R̅|| * ||V̅a||
@@ -118,7 +121,7 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
             double t1 = time + steps;
             Vector3 p1 = position + (velocity * steps);
             Vector3 v1 = velocity + (acceleration * steps);
-            Vector3 a1 = CalculateAcceleration();
+            Vector3 a1 = CalculateAcceleration(v1);
             Console.WriteLine("\nEulers: ");
             Console.WriteLine("p1: " + p1);
             Console.WriteLine("v1: " + v1);
@@ -127,57 +130,22 @@ namespace CA2_Jack_Maguire_Vilandas_Morrissey
 
         public void Rk4()
         {
-            double h;
-            Vector2 k, k1, k2, k3, k4, PV1;
-            Vector2 PV = new Vector2(position, velocity);
-
-            //h = (tFinal - time) / steps;
-            h = steps;
-            //K1
-            k1 = func(time, PV) * h;
-            //K2
-            k2 = func((time + h) / 2, (PV + k1) / 2) * h;
-            //K3
-            k3 = func((time + h) / 2, (PV + k2) / 2) * h;
-            //K4
-            k4 = func((time + h), (PV + k3)) * h;
-
-            k = (k1 + (k2 * 2d) + (k3 * 2d) + k4) * (1d / 6d);
-            //Console.WriteLine("k1" + k1);
-            //Console.WriteLine(k2);
-            //Console.WriteLine(k3);
-            //Console.WriteLine(k4);
-
-
-            PV1 = PV + k;
-            Console.WriteLine("\n" + PV1);
-        }
-
-        public Vector2 func(double time, Vector2 PV)
-        {
-            Vector2 PVfunc = PV * time;
-            //Console.WriteLine(PVfunc);
-            return PVfunc;
-        }
-
-        public void Rk42(Vector3 acceleration)
-        {
             Vector2 pv0 = new Vector2(position, velocity);
-            Vector2 k1 = new Vector2(velocity, acceleration) * steps;
-            Vector2 k2 = F(steps / 2d, pv0 + k1 / 2) * steps;
-            Vector2 k3 = F(steps / 2d, pv0 + k2 / 2) * steps;
-            Vector2 k4 = F(steps, pv0 + k3) * steps;
-            Vector2 k = (k1 + (k2 * 2) + (k3 * 2) + k4);
+            Vector2 k1 = F(pv0) * steps;
+            Vector2 k2 = F(pv0 + (k1 / 2)) * steps;
+            Vector2 k3 = F(pv0 + (k2 / 2)) * steps;
+            Vector2 k4 = F(pv0 + k3) * steps;
+            Vector2 k = (k1 + (k2 * 2) + (k3 * 2) + k4) * (1d / 6d);
             Vector2 pv1 = pv0 + k;
 
             Console.WriteLine("\nRk4: ");
-            Console.WriteLine("pv0: " + pv0);
             Console.WriteLine("pv1: " + pv1);
         }
 
-        public Vector2 F(double time, Vector2 y)
+        public Vector2 F(Vector2 y)
         {
-            return new Vector2(y.Y, CalculateAcceleration() * time);
+            Vector3 acceleration = CalculateAcceleration(y.Y);
+            return new Vector2(y.Y, acceleration);
         }
     }
 }
