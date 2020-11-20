@@ -1,8 +1,6 @@
-﻿using GDGame.MyGame.Actors;
-using GDGame.MyGame.Constants;
+﻿using GDGame.MyGame.Constants;
 using GDGame.MyGame.Controllers;
 using GDGame.MyGame.Enums;
-using GDGame.MyGame.Objects;
 using GDLibrary.Actors;
 using GDLibrary.Controllers;
 using GDLibrary.Debug;
@@ -15,7 +13,6 @@ using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace GDGame
@@ -38,10 +35,6 @@ namespace GDGame
         private UIController uiController;
         
 
-        //hashmap (Dictonary in C#) to store useful rails and curves
-        private Dictionary<string, Transform3DCurve> transform3DCurveDictionary;
-        private Dictionary<string, RailParameters> railDictionary;
-
         //defines centre point for the mouse i.e. (w/2, h/2)
         private Vector2 screenCentre;
 
@@ -62,6 +55,8 @@ namespace GDGame
         private EventDispatcher eventDispatcher;
         private Viewport halfSizeViewport;
         private RenderManager renderManager;
+
+        private ModelObject ball;
 
         #endregion Fields
 
@@ -103,13 +98,15 @@ namespace GDGame
             //cameras - notice we moved the camera creation BELOW where we created the drawn content - see DriveController
             InitCameras3D();
 
+            InitBall();
+
             //graphic settings - see https://en.wikipedia.org/wiki/Display_resolution#/media/File:Vector_Video_Standards8.svg
             InitGraphics(1440, 1050);
 
             //debug info
             InitDebug();
 
-            uiController = new UIController(this);
+            uiController = new UIController(this, keyboardManager, ball);
             Components.Add(uiController);
 
             base.Initialize();
@@ -175,21 +172,34 @@ namespace GDGame
             Camera3D camera3D = null;
             Viewport viewPort = new Viewport(0, 0, 1440, 1050);
 
-            #region Camera - First Person
+            #region Camera - Ball Third Person
 
             transform3D = new Transform3D(new Vector3(10, 10, 20),
-                new Vector3(0, 0, -1), Vector3.UnitY);
+                new Vector3(-1, 0, 0), Vector3.UnitY);
 
-            camera3D = new Camera3D("1st person",
+            camera3D = new Camera3D("3rd person",
                 ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen, viewPort);
 
-            //attach a controller
-            camera3D.ControllerList.Add(new FirstPersonController(
-                "1st person controller A", ControllerType.FirstPerson,
-                keyboardManager, mouseManager,
-                GameConstants.moveSpeed, GameConstants.strafeSpeed, GameConstants.rotateSpeed));
             cameraManager.Add(camera3D);
+
+            #endregion
+
+            #region Camera - First Person
+
+            //transform3D = new Transform3D(new Vector3(10, 10, 20),
+            //    new Vector3(0, 0, -1), Vector3.UnitY);
+
+            //camera3D = new Camera3D("1st person",
+            //    ActorType.Camera3D, StatusType.Update, transform3D,
+            //    ProjectionParameters.StandardDeepSixteenTen, viewPort);
+
+            ////attach a controller
+            //camera3D.ControllerList.Add(new FirstPersonController(
+            //    "1st person controller A", ControllerType.FirstPerson,
+            //    keyboardManager, mouseManager,
+            //    GameConstants.moveSpeed, GameConstants.strafeSpeed, GameConstants.rotateSpeed));
+            //cameraManager.Add(camera3D);
 
             #endregion Camera - First Person
 
@@ -329,6 +339,35 @@ namespace GDGame
         private void InitStaticModels()
         {
 
+        }
+
+        private void InitBall()
+        {
+            ////////Ball
+            //transform
+            Transform3D transform3D = new Transform3D(new Vector3(0, 0, 0),
+                                new Vector3(0, 0, 0),       //rotation
+                                new Vector3(1, 1, 1),        //scale
+                                    -Vector3.UnitY,         //look
+                                    Vector3.UnitZ);         //up
+
+            //effectparameters
+            EffectParameters effectParameters = new EffectParameters(modelEffect,
+                crate,
+                Color.White, 1);
+
+            ModelObject modelObject = new ModelObject("Ball", ActorType.Primitive,
+                StatusType.Drawn | StatusType.Update, transform3D,
+                effectParameters, sphere);
+
+            ball = modelObject;
+
+            ThirdPersonFollowCam controller = new ThirdPersonFollowCam(
+                keyboardManager, mouseManager, cameraManager[0]);
+
+            ball.ControllerList.Add(controller);
+
+            objectManager.Add(modelObject);
         }
 
         private void InitVertices()

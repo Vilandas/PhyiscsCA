@@ -1,12 +1,5 @@
-﻿using GDGame.MyGame.Enums;
-using GDGame.MyGame.Objects;
-using GDLibrary.Enums;
-using GDLibrary.Parameters;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace GDGame.MyGame.Constants
 {
@@ -81,79 +74,6 @@ namespace GDGame.MyGame.Constants
 
         public static readonly Vector3 cauldronPos = new Vector3(100, 0, 100);
         public static readonly Vector3 binPos = new Vector3(-100, 0, 100);
-
-        #endregion
-
-        #region Upgrades
-
-        //Name, Upgrade Action, { TierNum, Cost, Value } - value = value to pass via event
-        public static readonly Upgrade upgradeSpeed = new Upgrade("Move Speed", EventActionType.MoveSpeedUp,
-        new Dictionary<int, Tuple<int, float>>(){ 
-            { 1, new Tuple<int, float>(100, 10) },
-            { 2, new Tuple<int, float>(150, 25) },
-            { 3, new Tuple<int, float>(250, 50) }
-        });
-
-        public static readonly Upgrade upgradePotionValue = new Upgrade("Potion Value", EventActionType.ValueUp,
-        new Dictionary<int, Tuple<int, float>>(){
-            { 1, new Tuple<int, float>(100, 20) },
-            { 2, new Tuple<int, float>(200, 50) },
-            { 3, new Tuple<int, float>(400, 100) }
-        });
-
-        public static readonly Upgrade[] upgrades = { upgradeSpeed, upgradePotionValue };
-
-        #endregion
-
-        #region Ingredients
-
-        public static readonly Ingredient redSolid = new Ingredient(IngredientType.Red, IngredientState.Solid);
-        public static readonly Ingredient redDust = new Ingredient(IngredientType.Red, IngredientState.Dust);
-        public static readonly Ingredient redLiquid = new Ingredient(IngredientType.Red, IngredientState.Liquid);
-
-        public static readonly Ingredient blueSolid = new Ingredient(IngredientType.Blue, IngredientState.Solid);
-        public static readonly Ingredient blueDust = new Ingredient(IngredientType.Blue, IngredientState.Dust);
-        public static readonly Ingredient blueLiquid = new Ingredient(IngredientType.Blue, IngredientState.Liquid);
-
-        public static readonly Ingredient greenSolid = new Ingredient(IngredientType.Green, IngredientState.Solid);
-        public static readonly Ingredient greenDust = new Ingredient(IngredientType.Green, IngredientState.Dust);
-        public static readonly Ingredient greenLiquid = new Ingredient(IngredientType.Green, IngredientState.Liquid);
-
-
-        #endregion
-
-        #region Potion Data
-
-        //Name, Points, HandPos, Transform3D
-        public static readonly ArrayList potion1_data = new ArrayList { "Potion of Healing", 5, new Vector3(4, 18, -1.5f),
-            new Transform3D(new Vector3(cauldronPos.X, cauldronPos.Y + 60, cauldronPos.Z),   //translation
-                Vector3.Zero,           //rotation
-                new Vector3(2, 2, 2),   //scale
-                -Vector3.UnitZ,         //look
-                Vector3.UnitY)          //up
-        };
-        public static readonly ArrayList potion2_data = new ArrayList { "Potion of Something", 6, new Vector3(4, 18, -1.5f),
-        new Transform3D(new Vector3(cauldronPos.X, cauldronPos.Y + 60, cauldronPos.Z),   //translation
-                Vector3.Zero,           //rotation
-                new Vector3(2, 2, 2),   //scale
-                -Vector3.UnitZ,         //look
-                Vector3.UnitY)          //up
-        };
-
-        public static readonly Dictionary<Recipe, ArrayList> potions = new Dictionary<Recipe, ArrayList>();
-
-        public static void InitPotions()
-        {
-            Recipe recipe = new Recipe();
-            recipe.Add(redSolid, 2);
-            recipe.Add(blueSolid, 1);
-            potions.Add(recipe, potion1_data);
-
-            recipe = new Recipe();
-            recipe.Add(redSolid, 1);
-            recipe.Add(blueSolid, 2);
-            potions.Add(recipe, potion2_data);
-        }
 
         #endregion
     }

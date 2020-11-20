@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MyGame\Actors\" />
+    <Folder Include="MyGame\Objects\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.csproj" />

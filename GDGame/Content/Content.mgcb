@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/Fonts/debug.spritefont
 
+#begin Assets/Fonts/MyFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/MyFont.spritefont
+
 #begin Assets/Models/box2.FBX
 /importer:FbxImporter
 /processor:ModelProcessor

@@ -93,11 +93,11 @@ namespace Physics
         }
         public double Volume
         {
-            get { return (4d / 3d) * Math.PI * Math.Pow(radius, 3); }
+            get { return (4d / 3d) * Math.PI * Math.Pow(Radius, 3); }
         }
         public double Mass
         {
-            get { return density * volume; }
+            get { return Density * Volume; }
         }
 
         #endregion
