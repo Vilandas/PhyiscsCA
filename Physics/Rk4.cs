@@ -71,7 +71,7 @@ namespace Physics
         public Vector3 ForceMagnus(Vector3 va)
         {
             //F̅m = ||F̅m|| * F̂m
-            //Fm = d * r * ||R̅|| * ||V̅a||
+            //||Fm|| = d * r * ||R̅|| * ||V̅a||
             //d = PI/2 * P * r²
 
             double d = Math.PI / 2d * prop.FluidDensity * Math.Pow(prop.Radius, 2);

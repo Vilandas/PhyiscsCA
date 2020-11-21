@@ -76,6 +76,15 @@ namespace GDGame.MyGame.Controllers
         {
             Vector3 moveVector = Vector3.Zero;
 
+            if (keyboardManager.IsKeyDown(Keys.W))
+            {
+                moveVector -= camera3D.Transform3D.Look;
+            }
+            else if (keyboardManager.IsKeyDown(Keys.S))
+            {
+                moveVector += camera3D.Transform3D.Look;
+            }
+
             if (keyboardManager.IsKeyDown(Keys.A))
             {
                 moveVector += camera3D.Transform3D.Right;
@@ -84,6 +93,8 @@ namespace GDGame.MyGame.Controllers
             {
                 moveVector -= camera3D.Transform3D.Right;
             }
+
+            moveVector.Y = 0;
 
             //apply the movement
             offset += moveVector * (float)Math.Cos(gameTime.ElapsedGameTime.Milliseconds);

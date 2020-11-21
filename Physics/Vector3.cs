@@ -10,6 +10,7 @@ namespace Physics
         private double y;
         private double z;
         private double length;
+        private bool dirty;
 
         #endregion
 
@@ -37,7 +38,7 @@ namespace Physics
         {
             get
             {
-                if (length != 0)
+                if (!dirty)
                     return length;
                 return Math.Sqrt((x * x) + (y * y) + (z * z));
             }
@@ -185,6 +186,7 @@ namespace Physics
             this.y = y;
             this.z = z;
             length = 0;
+            dirty = true;
         }
 
         public void Normalise()
@@ -197,6 +199,7 @@ namespace Physics
             x *= n;
             y *= n;
             z *= n;
+            dirty = true;
         }
 
         public void Multiply(Vector3 other)
@@ -204,6 +207,7 @@ namespace Physics
             x *= other.X;
             y *= other.Y;
             z *= other.Z;
+            dirty = true;
         }
 
         public void Add(Vector3 other)
@@ -211,6 +215,7 @@ namespace Physics
             x += other.X;
             y += other.Y;
             z += other.Z;
+            dirty = true;
         }
 
         public void Divide(double n)
@@ -218,6 +223,7 @@ namespace Physics
             x /= n;
             y /= n;
             z /= n;
+            dirty = true;
         }
 
         public override string ToString()
