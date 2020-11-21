@@ -7,6 +7,7 @@ using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDGame.MyGame.Constants;
 using GDLibrary.Events;
+using GDLibrary.Utilities;
 
 namespace GDGame.MyGame.Controllers
 {
@@ -17,6 +18,8 @@ namespace GDGame.MyGame.Controllers
         private KeyboardManager keyboardManager;
         private MouseManager mouseManager;
         private Camera3D camera3D;
+        private float radius;
+        private Vector3 offset;
 
         #endregion
 
@@ -29,6 +32,8 @@ namespace GDGame.MyGame.Controllers
             this.keyboardManager = keyboardManager;
             this.mouseManager = mouseManager;
             this.camera3D = camera3D;
+            this.radius = 30;
+            offset = new Vector3(0, 0, 0);
         }
 
         #endregion
@@ -40,7 +45,7 @@ namespace GDGame.MyGame.Controllers
             if (parent != null)
             {
                 HandleCameraFollow(gameTime, parent);
-                HandleMouseInput(gameTime);
+                HandleKeyboardInput(gameTime);
             }
         }
 
@@ -48,27 +53,40 @@ namespace GDGame.MyGame.Controllers
         {
             //Offest the objects position to where the camera should be
             Vector3 parentPos = parent.Transform3D.Translation;
-            parentPos.X += 30;
-            parentPos.Y += 15;
-            parentPos.Z += 30;
+            parentPos.X += radius;
+            parentPos.Y += radius/2;
+            parentPos.Z += radius;
 
             //subtract objects position from camera position to get the distance
             parentPos -= camera3D.Transform3D.Translation;
 
-            //Offset the position before adding so it will take several updates to move to the objects position (This make the camera move smoothly)
-            //parentPos *= 0.1f;
-            camera3D.Transform3D.Translation += parentPos;
+            camera3D.Transform3D.Translation += parentPos + offset;
+
+            ////////////Modify Look
+            //step 1 - camera to target, normalise
+            Vector3 cameraToTarget = MathUtility.GetNormalizedObjectToTargetVector(camera3D.Transform3D, parent.Transform3D);
+
+            //round to prevent floating-point precision errors across updates
+            cameraToTarget = MathUtility.Round(cameraToTarget, 3);
+
+            camera3D.Transform3D.Look = cameraToTarget;
         }
 
-        private void HandleMouseInput(GameTime gameTime)
+        private void HandleKeyboardInput(GameTime gameTime)
         {
-            Vector2 mouseDelta = mouseManager.GetDeltaFromCentre(new Vector2(720, 525));
-            mouseDelta *= -0.01f * gameTime.ElapsedGameTime.Milliseconds;
+            Vector3 moveVector = Vector3.Zero;
 
-            if (mouseDelta.Length() != 0)
+            if (keyboardManager.IsKeyDown(Keys.A))
             {
-                camera3D.Transform3D.RotateBy(new Vector3(mouseDelta.X, 0, -mouseDelta.Y));
+                moveVector += camera3D.Transform3D.Right;
             }
+            else if (keyboardManager.IsKeyDown(Keys.D))
+            {
+                moveVector -= camera3D.Transform3D.Right;
+            }
+
+            //apply the movement
+            offset += moveVector * (float)Math.Cos(gameTime.ElapsedGameTime.Milliseconds);
         }
 
         public object Clone()

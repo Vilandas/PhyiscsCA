@@ -17,7 +17,8 @@ namespace GDGame.MyGame.Controllers
         private bool run;
         private bool step;
 
-        Button[] buttons;
+        private Button[] buttons;
+        private Button[] mainButtons;
 
         public UIController(Game game, KeyboardManager keyboardManager, ModelObject ball) : base(game)
         {
@@ -62,12 +63,20 @@ namespace GDGame.MyGame.Controllers
                 Location = new Vector2(1220, 230)
             };
 
+            //Button btnModify = new Button()
+            //{
+            //    Text = "5: Modify Custom",
+            //    Size = new Vector2(200, 50),
+            //    BackgroundColor = Color.Black,
+            //    Location = new Vector2(1220, 300)
+            //};
+
             Button btnStart = new Button()
             {
                 Text = "S: Start",
                 Size = new Vector2(200, 50),
                 BackgroundColor = Color.Black,
-                Location = new Vector2(1220, 300)
+                Location = new Vector2(1220, 370)
             };
 
             Button btnStep = new Button()
@@ -75,7 +84,7 @@ namespace GDGame.MyGame.Controllers
                 Text = "Space: Step",
                 Size = new Vector2(200, 50),
                 BackgroundColor = Color.Black,
-                Location = new Vector2(1220, 370)
+                Location = new Vector2(1220, 440)
             };
 
 
@@ -90,9 +99,10 @@ namespace GDGame.MyGame.Controllers
                 Location = new Vector2(20, 560)
             };
 
-            buttons = new Button[]{ btn1, btn2, btn3, btn4 };
+            buttons = new Button[] { btn1, btn2, btn3, btn4 };
+            mainButtons = new Button[] { btn1, btn2, btn3, btn4 };
 
-            foreach(Button button in buttons)
+            foreach (Button button in buttons)
             {
                 button.Clicked += ExampleBtn_Clicked;
                 button.MouseEnter += Example_MouseEnter;
@@ -218,7 +228,6 @@ namespace GDGame.MyGame.Controllers
                 ExampleBtn_Clicked(buttons[2], null);
             else if (keyboardManager.IsFirstKeyPress(Keys.D4))
                 ExampleBtn_Clicked(buttons[3], null);
-
         }
     }
 }
