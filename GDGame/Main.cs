@@ -1,8 +1,5 @@
-﻿using GDGame.MyGame.Constants;
-using GDGame.MyGame.Controllers;
-using GDGame.MyGame.Enums;
+﻿using GDGame.MyGame.Controllers;
 using GDLibrary.Actors;
-using GDLibrary.Controllers;
 using GDLibrary.Debug;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -13,7 +10,6 @@ using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace GDGame
 {

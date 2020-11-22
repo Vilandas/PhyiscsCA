@@ -1,6 +1,7 @@
 ﻿using System;
 using GDLibrary.Actors;
 using GDLibrary.Managers;
+using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.UI.Forms;
@@ -18,6 +19,9 @@ namespace GDGame.MyGame.Controllers
         private bool run;
         private bool step;
         private bool mainHidden;
+        private bool useGameSpeed;
+        private Timer timer;
+        private GameTime gameTime;
 
         private Button[] buttons;
         private Button[] mainButtons;
@@ -33,6 +37,7 @@ namespace GDGame.MyGame.Controllers
             this.step = false;
             this.mainHidden = false;
             this.rk4 = new Physics.Rk4(this.p);
+            this.useGameSpeed = false;
         }
 
         public override void InitializeComponent()
@@ -100,6 +105,15 @@ namespace GDGame.MyGame.Controllers
                 ZIndex = 1
             };
 
+            Button btnGameSpeed = new Button()
+            {
+                Text = "Use Game Time\nAs Steps: OFF",
+                Size = new Vector2(220, 80),
+                BackgroundColor = Color.Black,
+                Location = new Vector2(1200, 510),
+                ZIndex = 1
+            };
+
 
             infoPanel = new TextArea()
             {
@@ -113,7 +127,7 @@ namespace GDGame.MyGame.Controllers
             };
 
             buttons = new Button[] { btn1, btn2, btn3, btn4 };
-            mainButtons = new Button[] { btn1, btn2, btn3, btn4, btnModify, btnStart, btnStep };
+            mainButtons = new Button[] { btn1, btn2, btn3, btn4, btnModify, btnStart, btnStep, btnGameSpeed };
 
             foreach (Button button in buttons)
             {
@@ -126,12 +140,29 @@ namespace GDGame.MyGame.Controllers
             Controls.Add(btnStart);
             Controls.Add(btnStep);
             Controls.Add(btnModify);
+            Controls.Add(btnGameSpeed);
             btnStart.Clicked += BtnStart_Clicked;
             btnStep.Clicked += BtnStep_Clicked;
             btnModify.Clicked += BtnModify_Clicked;
+            btnGameSpeed.Clicked += BtnGameSpeed_Clicked;
             Controls.Add(infoPanel);
 
             InitModifyMenu();
+        }
+
+        private void BtnGameSpeed_Clicked(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if(useGameSpeed)
+            {
+                useGameSpeed = false;
+                btn.Text = "Use Game Time\nAs Steps: OFF";
+            }
+            else
+            {
+                useGameSpeed = true;
+                btn.Text = "Use Game Time\nAs Steps: ON";
+            }
         }
 
         private void InitModifyMenu()
@@ -432,67 +463,70 @@ namespace GDGame.MyGame.Controllers
         private void ModifyButton_Clicked(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            switch(btn.Text)
+            if (inputButton.Text.Length > 0)
             {
-                case "Set Gravity":
-                    Physics.ExampleData.custom.Gravity = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Time":
-                    Physics.ExampleData.custom.Time = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Steps":
-                    Physics.ExampleData.custom.Steps = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Radius":
-                    Physics.ExampleData.custom.Radius = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Density":
-                    Physics.ExampleData.custom.Density = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Fluid Density":
-                    Physics.ExampleData.custom.FluidDensity = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "Set Drag Coeff":
-                    Physics.ExampleData.custom.DragCoeff = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "p.X":
-                    Physics.ExampleData.custom.Position.X = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "p.Y":
-                    Physics.ExampleData.custom.Position.Y = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "p.Z":
-                    Physics.ExampleData.custom.Position.Z = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "v.X":
-                    Physics.ExampleData.custom.Velocity.X = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "v.Y":
-                    Physics.ExampleData.custom.Velocity.Y = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "v.Z":
-                    Physics.ExampleData.custom.Velocity.Z = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "s.X":
-                    Physics.ExampleData.custom.Spin.X = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "s.Y":
-                    Physics.ExampleData.custom.Spin.Y = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "s.Z":
-                    Physics.ExampleData.custom.Spin.Z = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "vw.X":
-                    Physics.ExampleData.custom.FlowRate.X = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "vw.Y":
-                    Physics.ExampleData.custom.FlowRate.Y = Convert.ToDouble(inputButton.Text);
-                    break;
-                case "vw.Z":
-                    Physics.ExampleData.custom.FlowRate.Z = Convert.ToDouble(inputButton.Text);
-                    break;
+                switch (btn.Text)
+                {
+                    case "Set Gravity":
+                        Physics.ExampleData.custom.Gravity = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Time":
+                        Physics.ExampleData.custom.Time = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Steps":
+                        Physics.ExampleData.custom.Steps = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Radius":
+                        Physics.ExampleData.custom.Radius = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Density":
+                        Physics.ExampleData.custom.Density = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Fluid Density":
+                        Physics.ExampleData.custom.FluidDensity = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "Set Drag Coeff":
+                        Physics.ExampleData.custom.DragCoeff = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "p.X":
+                        Physics.ExampleData.custom.Position.X = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "p.Y":
+                        Physics.ExampleData.custom.Position.Y = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "p.Z":
+                        Physics.ExampleData.custom.Position.Z = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "v.X":
+                        Physics.ExampleData.custom.Velocity.X = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "v.Y":
+                        Physics.ExampleData.custom.Velocity.Y = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "v.Z":
+                        Physics.ExampleData.custom.Velocity.Z = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "s.X":
+                        Physics.ExampleData.custom.Spin.X = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "s.Y":
+                        Physics.ExampleData.custom.Spin.Y = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "s.Z":
+                        Physics.ExampleData.custom.Spin.Z = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "vw.X":
+                        Physics.ExampleData.custom.FlowRate.X = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "vw.Y":
+                        Physics.ExampleData.custom.FlowRate.Y = Convert.ToDouble(inputButton.Text);
+                        break;
+                    case "vw.Z":
+                        Physics.ExampleData.custom.FlowRate.Z = Convert.ToDouble(inputButton.Text);
+                        break;
+                }
+                ExampleBtn_Clicked(buttons[3], null);
             }
-            ExampleBtn_Clicked(buttons[3], null);
         }
 
         private void Back_Clicked(object sender, EventArgs e)
@@ -512,7 +546,17 @@ namespace GDGame.MyGame.Controllers
 
         private void BtnStart_Clicked(object sender, EventArgs e)
         {
-            run = true; 
+            run = true;
+            if (useGameSpeed)
+            {
+                p.Steps = gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                timer = new Timer(p.Steps);
+                timer.StartTimer(gameTime);
+            }
+
         }
 
         private void Example_MouseEnter(object sender, EventArgs e)
@@ -536,7 +580,7 @@ namespace GDGame.MyGame.Controllers
             }
             infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
                 "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.OriginalPosition +
-                "\n Velocity: " + p.OriginalVelocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
+                "\n Velocity: " + p.OriginalVelocity + " \n Spin: " + p.OriginalSteps + " \n Fluid Density: " + p.FluidDensity +
                 "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate;
         }
 
@@ -544,7 +588,7 @@ namespace GDGame.MyGame.Controllers
         {
             infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
                 "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.Position +
-                "\n Velocity: " + p.Velocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
+                "\n Velocity: " + p.Velocity + " \n Spin: " + p.Steps + " \n Fluid Density: " + p.FluidDensity +
                 "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate;
 
         }
@@ -572,6 +616,8 @@ namespace GDGame.MyGame.Controllers
 
             p.Position = p.OriginalPosition;
             p.Velocity = p.OriginalVelocity;
+            p.Steps = p.OriginalSteps;
+            p.Time = p.OriginalTime;
 
             rk4 = new Physics.Rk4(p);
             ball.Transform3D.Translation = new Vector3((float)p.OriginalPosition.X, (float)p.OriginalPosition.Z, (float)p.OriginalPosition.Y);
@@ -615,37 +661,53 @@ namespace GDGame.MyGame.Controllers
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
-            if(run || step)
+            this.gameTime = gameTime;
+            if (run || step)
             {
-                Physics.Vector2 pv = rk4.CalculateRk4();
-                rk4.UpdatePV(pv);
-
-                p.Position = pv.X;
-                p.Velocity = pv.Y;
-
-                if (p.Position.Z < p.Radius)
+                if (useGameSpeed || step)
                 {
-                    p.Position.Z = p.Radius;
-                    p.Velocity.Z = 0;
+                    Run();
                 }
-
-                ball.Transform3D.Translation = new Vector3((float)p.Position.X, (float)p.Position.Z, (float)p.Position.Y);
-                
-                infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
-                "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.Position +
-                "\n Velocity: " + p.Velocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
-                "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate + 
-                "\n Acceleration: " + rk4.CalculateAcceleration(p.Velocity);
-
-                if (ball.Transform3D.Translation.Y <= ball.Transform3D.Scale.X)
-                {
-                    run = false;
-                }
-                step = false;
+                else if (timer.IsDone(gameTime))
+                    Run();
             }
+
             CheckKeysSet();
+
+            base.Update(gameTime);
+        }
+
+        private void Run()
+        {
+            Physics.Vector2 pv = rk4.CalculateRk4();
+            rk4.UpdatePV(pv);
+            p.Position = pv.X;
+            p.Velocity = pv.Y;
+            p.Time += p.Steps;
+
+            if (p.Position.Z < p.Radius)
+            {
+                p.Position.Z = p.Radius;
+                p.Velocity.Z = 0;
+                rk4.Data.ExportData();
+            }
+
+            ball.Transform3D.Translation = new Vector3((float)p.Position.X, (float)p.Position.Z, (float)p.Position.Y);
+
+            infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
+            "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.Position +
+            "\n Velocity: " + p.Velocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
+            "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate +
+            "\n Acceleration: " + rk4.CalculateAcceleration(p.Velocity);
+
+            if(!useGameSpeed && !step)
+                timer.StartTimer(gameTime);
+
+            if (ball.Transform3D.Translation.Y <= ball.Transform3D.Scale.X)
+            {
+                run = false;
+            }
+            step = false;
         }
 
         private void CheckKeysSet()

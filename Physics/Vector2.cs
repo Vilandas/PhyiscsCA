@@ -71,7 +71,7 @@ namespace Physics
 
         public override string ToString()
         {
-            return "(x: " + x + ", y: " + y + ")";
+            return "Position: " + x + "\nVelocity: " + y;
         }
 
         public object Clone()

@@ -6,9 +6,10 @@ namespace Physics
     {
         #region Fields
 
+        private string name;
         private double gravity;
-        private double time;
-        private double steps;
+        private double time, originalTime;
+        private double steps, originalSteps;
         private double radius;
         private double density;
         private Vector3 position, originalPosition;
@@ -26,6 +27,11 @@ namespace Physics
 
         #region Properties
 
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
         public double Gravity
         {
             get { return gravity; }
@@ -36,10 +42,21 @@ namespace Physics
             get { return time; }
             set { time = value; }
         }
+        public double OriginalTime
+        {
+            get { return originalTime; }
+            set { originalTime = value; }
+        }
         public double Steps
         {
             get { return steps; }
             set { steps = value; }
+        }
+
+        public double OriginalSteps
+        {
+            get { return originalSteps; }
+            set { originalSteps = value; }
         }
         public double Radius
         {
@@ -104,14 +121,15 @@ namespace Physics
 
         #region Constructor
 
-        public Properties(double gravity,
+        public Properties(string name, double gravity,
             double time, double steps, double radius, double density,
             Vector3 position, Vector3 velocity, Vector3 spin,
             double fluidDensity, double dragCoeff, Vector3 flowRate)
         {
+            this.name = name;
             this.gravity = gravity;
-            this.time = time;
-            this.steps = steps;
+            this.time = this.originalTime = time;
+            this.steps = this.originalSteps = steps;
             this.radius = radius;
             this.density = density;
 

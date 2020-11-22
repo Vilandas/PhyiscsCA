@@ -24,14 +24,15 @@ namespace Physics
         {
             Rk4 p = new Rk4(prop);
 
-            Console.WriteLine("PV(0): " + new Vector2(prop.Position, prop.Velocity));
-            while(prop.Time <= 0.9)
+            Console.WriteLine("PV(0):\n" + new Vector2(prop.Position, prop.Velocity));
+            while(prop.Position.Z > prop.Radius)
             {
                 prop.Time += prop.Steps;
                 Vector2 pvt = p.CalculateRk4();
-                Console.WriteLine("\nPV(" + prop.Time + "): " + pvt);
+                Console.WriteLine("\nPV(" + prop.Time + "):\n" + pvt);
                 p.UpdatePV(pvt);
             }
+            p.Data.ExportData();
         }
 
 

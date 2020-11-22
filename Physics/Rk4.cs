@@ -6,15 +6,22 @@ namespace Physics
     {
         #region Fields
 
-        Properties prop;
+        private Properties prop;
+        private Data data;
 
         #endregion
+
+        public Data Data
+        { 
+            get { return data; } 
+        }
 
         #region Constructor
 
         public Rk4(Properties prop)
         {
             this.prop = prop;
+            this.data = new Data(this.prop.Name);
         }
 
         #endregion
@@ -37,6 +44,8 @@ namespace Physics
             Vector3 fNet = fGravity + fDrag + fMagnus;
 
             Vector3 acceleration = Vector3.Multiply(fNet, 1d / prop.Mass);
+
+            data.AddForces(fGravity, fDrag, fMagnus, fNet);
 
             //Console.WriteLine("\nfGravity: " + fGravity);
             //Console.WriteLine("fDrag: " + fDrag);
@@ -106,8 +115,7 @@ namespace Physics
             Vector2 k = (k1 + (k2 * 2) + (k3 * 2) + k4) * (1d / 6d);
             Vector2 pv1 = pv0 + k;
 
-            //Console.WriteLine("\nRk4: ");
-            //Console.WriteLine("pv1: " + pv1);
+            data.AddRK4(pv0, k1, k2, k3, k4, k, prop.Time);
 
             return pv1;
         }
