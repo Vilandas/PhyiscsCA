@@ -52,7 +52,6 @@ namespace Physics
             get { return steps; }
             set { steps = value; }
         }
-
         public double OriginalSteps
         {
             get { return originalSteps; }

@@ -20,7 +20,6 @@ namespace GDGame.MyGame.Controllers
         private bool step;
         private bool mainHidden;
         private bool useGameSpeed;
-        private Timer timer;
         private GameTime gameTime;
 
         private Button[] buttons;
@@ -474,7 +473,8 @@ namespace GDGame.MyGame.Controllers
                         Physics.ExampleData.custom.Time = Convert.ToDouble(inputButton.Text);
                         break;
                     case "Set Steps":
-                        Physics.ExampleData.custom.Steps = Convert.ToDouble(inputButton.Text);
+                        Physics.ExampleData.custom.Steps = Physics.ExampleData.custom.OriginalSteps
+                            = Convert.ToDouble(inputButton.Text);
                         break;
                     case "Set Radius":
                         Physics.ExampleData.custom.Radius = Convert.ToDouble(inputButton.Text);
@@ -552,11 +552,7 @@ namespace GDGame.MyGame.Controllers
                 p.Steps = gameTime.ElapsedGameTime.TotalSeconds;
             }
             else
-            {
-                timer = new Timer(p.Steps);
-                timer.StartTimer(gameTime);
-            }
-
+                p.Steps = p.OriginalSteps;
         }
 
         private void Example_MouseEnter(object sender, EventArgs e)
@@ -580,7 +576,7 @@ namespace GDGame.MyGame.Controllers
             }
             infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
                 "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.OriginalPosition +
-                "\n Velocity: " + p.OriginalVelocity + " \n Spin: " + p.OriginalSteps + " \n Fluid Density: " + p.FluidDensity +
+                "\n Velocity: " + p.OriginalVelocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
                 "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate;
         }
 
@@ -664,12 +660,7 @@ namespace GDGame.MyGame.Controllers
             this.gameTime = gameTime;
             if (run || step)
             {
-                if (useGameSpeed || step)
-                {
-                    Run();
-                }
-                else if (timer.IsDone(gameTime))
-                    Run();
+                Run();
             }
 
             CheckKeysSet();
@@ -699,9 +690,6 @@ namespace GDGame.MyGame.Controllers
             "\n Velocity: " + p.Velocity + " \n Spin: " + p.Spin + " \n Fluid Density: " + p.FluidDensity +
             "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate +
             "\n Acceleration: " + rk4.CalculateAcceleration(p.Velocity);
-
-            if(!useGameSpeed && !step)
-                timer.StartTimer(gameTime);
 
             if (ball.Transform3D.Translation.Y <= ball.Transform3D.Scale.X)
             {
