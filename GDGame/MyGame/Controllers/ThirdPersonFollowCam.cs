@@ -18,7 +18,6 @@ namespace GDGame.MyGame.Controllers
         private KeyboardManager keyboardManager;
         private MouseManager mouseManager;
         private Camera3D camera3D;
-        private float radius;
         private Vector3 offset;
 
         #endregion
@@ -32,7 +31,6 @@ namespace GDGame.MyGame.Controllers
             this.keyboardManager = keyboardManager;
             this.mouseManager = mouseManager;
             this.camera3D = camera3D;
-            this.radius = 30;
             offset = new Vector3(0, 0, 0);
         }
 
@@ -53,9 +51,9 @@ namespace GDGame.MyGame.Controllers
         {
             //Offest the objects position to where the camera should be
             Vector3 parentPos = parent.Transform3D.Translation;
-            parentPos.X += radius;
-            parentPos.Y += radius/2;
-            parentPos.Z += radius;
+            parentPos.X += parent.Transform3D.Scale.X;
+            parentPos.Y += parent.Transform3D.Scale.X;
+            parentPos.Z += parent.Transform3D.Scale.X;
 
             //subtract objects position from camera position to get the distance
             parentPos -= camera3D.Transform3D.Translation;
