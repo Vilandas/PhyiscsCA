@@ -83,13 +83,19 @@ namespace Physics
             //||Fm|| = d * r * ||R̅|| * ||V̅a||
             //d = PI/2 * P * r²
 
+            if (prop.Spin.X == 0 && prop.Spin.Y == 0 && prop.Spin.Z == 0)
+            {
+                return Vector3.Zero();
+            }
+
             double d = Math.PI / 2d * prop.FluidDensity * Math.Pow(prop.Radius, 2);
             double fm = (d * prop.Radius * prop.Spin.Length * va.Length);
 
             //F̂m = R̅ x V̅a / ||R̅ x V̅a||
             Vector3 rXva = Vector3.Cross(prop.Spin, va);
-            Vector3 fmHat = Vector3.Normalise(rXva);
+            Vector3 fmHat;
 
+            fmHat = Vector3.Normalise(rXva);
             return Vector3.Multiply(fmHat, fm);
         }
 

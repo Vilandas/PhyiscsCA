@@ -93,16 +93,42 @@ namespace Physics
 
                 ws.Cells["A" + temp].Value = "K";
 
-                string col2 = "A";
-                for(int i = 0; i < time.Count; i++)
+                string col = "A";
+                for (int i = 0; i < time.Count; i++)
                 {
-                    string col = "" + (char)('B' + i);
-                    if(col[0] > 'Z')
+                    char[] array = col.ToCharArray();
+                    array[array.Length - 1]++;
+                    for (int j = array.Length - 1; j >= 0; j--)
                     {
-                        col = col2 + (char)(col[0] - (26 * (col2[0] - 64)));
-                        if (col[1] == 'Z')
-                            col2 = "" + (char)(col2[0] + 1);
+                        if (array[j] > 'Z')
+                        {
+                            array[j] = 'A';
+                            if (j != 0)
+                            {
+                                array[j - 1]++;
+                            }
+                            else col = 'A' + new string(array);
+                        }
+                        else if (j == 0)
+                            col = new string(array);
                     }
+                    //string col = "" + (char)('B' + i);
+                    //if(col[0] > 'Z')
+                    //{
+                    //    col = col2 + (char)(col[0] - (26 * (col2[0] - 64)));
+                    //    if (col[1] == 'Z')
+                    //    {
+                    //        col2 = "" + (char)(col2[0] + 1);
+                    //        if(col2[0] > 'Z')
+                    //        {
+                    //            col = col3 + (char)(col2[0] - (26 * (col3[0] - 64))) + (26 * (col2[0] - 64));
+                    //            if(col2[1] == 'Z')
+                    //            {
+                    //                col3 = "" + (char)(col3[0] + 1);
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     ws.Cells[col + 1].Value = time[i];
                     ws.Cells[col + 2].Value = positions[i].ToString();

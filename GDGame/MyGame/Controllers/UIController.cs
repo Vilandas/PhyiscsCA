@@ -684,6 +684,7 @@ namespace GDGame.MyGame.Controllers
             }
 
             ball.Transform3D.Translation = new Vector3((float)p.Position.X, (float)p.Position.Z, (float)p.Position.Y);
+            ball.Transform3D.RotateBy(new Vector3((float)p.Spin.X, (float)p.Spin.Z, (float)p.Spin.Y) * (float)(p.Time/p.Steps));
 
             infoPanel.Text = "\n Gravity: " + p.Gravity + "\n Time: " + p.Time + " \n Step Size: " + p.Steps +
             "\n Radius: " + p.Radius + " \n Density: " + p.Density + " \n Position: " + p.Position +
