@@ -35,7 +35,7 @@ namespace GDGame
         private Vector2 screenCentre;
 
         //size of the skybox and ground plane
-        private float worldScale = 3000;
+        private float worldScale = 1000;
 
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass, crate;
@@ -102,7 +102,7 @@ namespace GDGame
             //debug info
             InitDebug();
 
-            uiController = new UIController(this, keyboardManager, ball);
+            uiController = new UIController(this, keyboardManager, ball, cameraManager[0]);
             Components.Add(uiController);
 
             base.Initialize();
@@ -358,10 +358,10 @@ namespace GDGame
 
             ball = modelObject;
 
-            ThirdPersonFollowCam controller = new ThirdPersonFollowCam(
-                keyboardManager, mouseManager, cameraManager[0]);
+            //ThirdPersonFollowCam controller = new ThirdPersonFollowCam(
+            //    keyboardManager, mouseManager, cameraManager[0]);
 
-            ball.ControllerList.Add(controller);
+            //ball.ControllerList.Add(controller);
 
             objectManager.Add(modelObject);
         }

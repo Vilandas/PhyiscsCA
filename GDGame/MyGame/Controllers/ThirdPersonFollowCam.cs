@@ -50,15 +50,15 @@ namespace GDGame.MyGame.Controllers
         private void HandleCameraFollow(GameTime gameTime, Actor3D parent)
         {
             //Offest the objects position to where the camera should be
-            Vector3 parentPos = parent.Transform3D.Translation;
-            parentPos.X += parent.Transform3D.Scale.X;
-            parentPos.Y += parent.Transform3D.Scale.X;
-            parentPos.Z += parent.Transform3D.Scale.X;
+            //Vector3 parentPos = parent.Transform3D.Translation;
+            //parentPos.X += parent.Transform3D.Scale.X;
+            //parentPos.Y += parent.Transform3D.Scale.X;
+            //parentPos.Z += parent.Transform3D.Scale.X;
 
-            //subtract objects position from camera position to get the distance
-            parentPos -= camera3D.Transform3D.Translation;
+            ////subtract objects position from camera position to get the distance
+            //parentPos -= camera3D.Transform3D.Translation;
 
-            camera3D.Transform3D.Translation += parentPos + offset;
+            //camera3D.Transform3D.Translation += parentPos + offset;
 
             ////////////Modify Look
             //step 1 - camera to target, normalise
@@ -95,7 +95,7 @@ namespace GDGame.MyGame.Controllers
             moveVector.Y = 0;
 
             //apply the movement
-            offset += moveVector * (float)Math.Cos(gameTime.ElapsedGameTime.Milliseconds);
+            offset += 0.05f * moveVector * (float)Math.Cos(gameTime.ElapsedGameTime.Milliseconds);
         }
 
         public object Clone()

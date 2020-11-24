@@ -71,7 +71,7 @@ namespace Physics
         //F̅d = ||F̅d|| * F̂d = [½ * P * A * Cd * ||Va||²][-V̂a]
         public Vector3 ForceDrag(Vector3 va)
         {
-            double fd = (1d / 2d) * prop.FluidDensity * (Math.PI * Math.Pow(prop.Radius, 2)) * prop.DragCoeff * Math.Pow(va.Length, 2);
+            double fd = (1d / 2d) * prop.FluidDensity * (4 * Math.PI * Math.Pow(prop.Radius, 2)) * prop.DragCoeff * Math.Pow(va.Length, 2);
             Vector3 unitVa = Vector3.Normalise(va);
             return Vector3.Multiply(unitVa, -fd);
         }

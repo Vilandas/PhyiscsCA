@@ -2,6 +2,7 @@
 using GDLibrary.Actors;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
+using GDLibrary.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.UI.Forms;
@@ -21,13 +22,15 @@ namespace GDGame.MyGame.Controllers
         private bool mainHidden;
         private bool useGameSpeed;
         private GameTime gameTime;
+        private Camera3D camera3D;
+        private Vector3 offset;
 
         private Button[] buttons;
         private Button[] mainButtons;
         private Button[] modifySetters;
         private Button[] modifyButtons;
 
-        public UIController(Game game, KeyboardManager keyboardManager, ModelObject ball) : base(game)
+        public UIController(Game game, KeyboardManager keyboardManager, ModelObject ball, Camera3D camera3D) : base(game)
         {
             this.keyboardManager = keyboardManager;
             this.ball = ball;
@@ -37,6 +40,8 @@ namespace GDGame.MyGame.Controllers
             this.mainHidden = false;
             this.rk4 = new Physics.Rk4(this.p);
             this.useGameSpeed = false;
+            this.camera3D = camera3D;
+            this.offset = Vector3.Zero;
         }
 
         public override void InitializeComponent()
@@ -662,6 +667,8 @@ namespace GDGame.MyGame.Controllers
             {
                 Run();
             }
+            HandleKeyboardInput(gameTime);
+            HandleCameraFollow();
 
             CheckKeysSet();
 
@@ -681,6 +688,7 @@ namespace GDGame.MyGame.Controllers
                 p.Position.Z = p.Radius;
                 p.Velocity.Z = 0;
                 rk4.Data.ExportData();
+                run = false;
             }
 
             ball.Transform3D.Translation = new Vector3((float)p.Position.X, (float)p.Position.Z, (float)p.Position.Y);
@@ -692,11 +700,56 @@ namespace GDGame.MyGame.Controllers
             "\n Drag Coefficient: " + p.DragCoeff + " \n Flow Rate: " + p.FlowRate +
             "\n Acceleration: " + rk4.CalculateAcceleration(p.Velocity);
 
-            if (ball.Transform3D.Translation.Y <= ball.Transform3D.Scale.X)
-            {
-                run = false;
-            }
             step = false;
+        }
+
+        private void HandleCameraFollow()
+        {
+            //Offest the objects position to where the camera should be
+            Vector3 parentPos = ball.Transform3D.Translation;
+            parentPos.X += ball.Transform3D.Scale.X;
+            parentPos.Y += ball.Transform3D.Scale.X;
+            parentPos.Z += ball.Transform3D.Scale.X;
+
+            //subtract objects position from camera position to get the distance
+            parentPos -= camera3D.Transform3D.Translation;
+
+            camera3D.Transform3D.Translation += parentPos + offset;
+
+            Vector3 cameraToTarget = MathUtility.GetNormalizedObjectToTargetVector(camera3D.Transform3D, ball.Transform3D);
+
+            //round to prevent floating-point precision errors across updates
+            cameraToTarget = MathUtility.Round(cameraToTarget, 3);
+
+            camera3D.Transform3D.Look = cameraToTarget;
+        }
+
+        private void HandleKeyboardInput(GameTime gameTime)
+        {
+            Vector3 moveVector = Vector3.Zero;
+
+            if (keyboardManager.IsKeyDown(Keys.W))
+            {
+                moveVector -= camera3D.Transform3D.Look;
+            }
+            else if (keyboardManager.IsKeyDown(Keys.S))
+            {
+                moveVector += camera3D.Transform3D.Look;
+            }
+
+            if (keyboardManager.IsKeyDown(Keys.A))
+            {
+                moveVector += camera3D.Transform3D.Right;
+            }
+            else if (keyboardManager.IsKeyDown(Keys.D))
+            {
+                moveVector -= camera3D.Transform3D.Right;
+            }
+
+            moveVector.Y = 0;
+
+            //apply the movement
+            offset += 0.05f * moveVector * (float)Math.Cos(gameTime.ElapsedGameTime.Milliseconds);
         }
 
         private void CheckKeysSet()
