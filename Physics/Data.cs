@@ -121,8 +121,8 @@ namespace Physics
                     List<List<Vector2>> klists = new List<List<Vector2>>(){ k1, k2, k3, k4 };
                     for (int j = 0; j < 4; j++)
                     {
-                        ws.Cells[col + temp].Value = "Position: " + klists[j][i].X + 
-                            "\nVelocity: " + klists[j][i].Y;
+                        ws.Cells[col + temp].Value = "Velocity: " + klists[j][i].X +
+                            "\nAcceleration: " + klists[j][i].Y;
                         ws.Cells[col + (temp + 1)].Value = forceGravity[j + (4 * i)].ToString();
                         ws.Cells[col + (temp + 2)].Value = forceDrag[j + (4 * i)].ToString();
                         ws.Cells[col + (temp + 3)].Value = forceMagnus[j + (4 * i)].ToString();
