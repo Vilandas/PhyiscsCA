@@ -22,10 +22,6 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MyGame\Actors\" />
-    <Folder Include="MyGame\Objects\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.csproj" />
   </ItemGroup>
   <Import Project="..\GDLibrary\GDLibrary.projitems" Label="Shared" />

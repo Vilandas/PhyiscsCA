@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using OfficeOpenXml;
 
@@ -133,7 +135,15 @@ namespace Physics
                     ws.Cells[col + temp].Value = k[i];
                 }
 
-                p.SaveAs(new FileInfo(name + ".xlsx"));
+                try
+                {
+                    p.SaveAs(new FileInfo(name + ".xlsx"));
+                }
+                catch(Exception e)
+                {
+                    Debug.WriteLine("ERROR - Could not save file");
+                    Debug.WriteLine(e.Message);
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using GDGame.MyGame.Controllers;
-using GDLibrary.Actors;
+﻿using GDLibrary.Actors;
 using GDLibrary.Debug;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -181,81 +180,6 @@ namespace GDGame
 
             #endregion
 
-            #region Camera - First Person
-
-            //transform3D = new Transform3D(new Vector3(10, 10, 20),
-            //    new Vector3(0, 0, -1), Vector3.UnitY);
-
-            //camera3D = new Camera3D("1st person",
-            //    ActorType.Camera3D, StatusType.Update, transform3D,
-            //    ProjectionParameters.StandardDeepSixteenTen, viewPort);
-
-            ////attach a controller
-            //camera3D.ControllerList.Add(new FirstPersonController(
-            //    "1st person controller A", ControllerType.FirstPerson,
-            //    keyboardManager, mouseManager,
-            //    GameConstants.moveSpeed, GameConstants.strafeSpeed, GameConstants.rotateSpeed));
-            //cameraManager.Add(camera3D);
-
-            #endregion Camera - First Person
-
-            #region Camera - Flight
-
-            //transform3D = new Transform3D(new Vector3(0, 10, 10),
-            //            new Vector3(0, 0, -1),
-            //            Vector3.UnitY);
-
-            //camera3D = new Camera3D("flight person",
-            //    ActorType.Camera3D, StatusType.Update, transform3D,
-            //    ProjectionParameters.StandardDeepSixteenTen, new Viewport(0, 384, 512, 384));
-
-            ////define move parameters
-            //MoveParameters moveParameters = new MoveParameters(keyboardManager,
-            //    mouseManager, GameConstants.flightMoveSpeed, GameConstants.flightStrafeSpeed,
-            //    GameConstants.flightRotateSpeed,
-            //    GameConstants.MoveKeys[0]);
-
-            //attach a controller
-            //camera3D.ControllerList.Add(new FlightCameraController("flight controller",
-            //                            ControllerType.FlightCamera, moveParameters));
-            //cameraManager.Add(camera3D);
-
-            #endregion Camera - Flight
-
-            #region Camera - Security
-
-            //transform3D = new Transform3D(new Vector3(10, 10, 50),
-            //            new Vector3(0, 0, -1),
-            //            Vector3.UnitY);
-
-            //camera3D = new Camera3D("security",
-            //    ActorType.Camera3D, StatusType.Update, transform3D,
-            //    ProjectionParameters.StandardDeepSixteenTen, new Viewport(512, 384, 512, 384));
-
-            //camera3D.ControllerList.Add(new PanController(
-            //    "pan controller", ControllerType.Pan,
-            //    new Vector3(1, 1, 0), new TrigonometricParameters(30, GameConstants.mediumAngularSpeed, 0)));
-            //cameraManager.Add(camera3D);
-
-            #endregion Camera - Security
-
-            #region Camera - Curve3D
-
-            //notice that it doesnt matter what translation, look, and up are since curve will set these
-            //transform3D = new Transform3D(Vector3.Zero, Vector3.Zero, Vector3.Zero);
-
-            //camera3D = new Camera3D("curve camera - main arena",
-            //  ActorType.Camera3D, StatusType.Update, transform3D,
-            //  ProjectionParameters.StandardDeepSixteenTen, viewPort);
-
-            //camera3D.ControllerList.Add(new Curve3DController("main arena - fly through - 1",
-            //    ControllerType.Curve,
-            //            transform3DCurveDictionary["headshake1"])); //use the curve dictionary to retrieve a transform3DCurve by id
-
-            //cameraManager.Add(camera3D);
-
-            #endregion Camera - Curve3D
-
             cameraManager.ActiveCameraIndex = 0; //0, 1, 2, 3
         }
 
@@ -327,14 +251,6 @@ namespace GDGame
 
             //add grass plane
             InitGround();
-
-            //models
-            InitStaticModels();
-        }
-
-        private void InitStaticModels()
-        {
-
         }
 
         private void InitBall()
